@@ -1,20 +1,29 @@
 /**
  * DocumentVerifier — verifies uploaded KYC documents.
  *
- * Uses heuristic checks + randomized scenarios for game logic.
+ * Uses local Ollama API with Qwen2.5-VL for vision analysis.
  */
+
+const OLLAMA_BASE_URL = 'http://localhost:11434';
 
 export class DocumentVerifier {
   constructor() {
-    // No external dependencies needed for pure game logic
+    this._ollamaModel = 'qwen2.5vl:7b';
   }
 
   /**
    * Check if Ollama is running locally.
-   * Deprecated: Always returns false as we're using game logic exclusively.
    */
   async checkOllamaAvailability() {
-    return false;
+    try {
+      const res = await fetch(`${OLLAMA_BASE_URL}/api/tags`, {
+        method: 'GET',
+        signal: AbortSignal.timeout(3000),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
   }
 
   /**
@@ -28,9 +37,30 @@ export class DocumentVerifier {
       return { type, valid: false, issues: ['No document uploaded'] };
     }
 
-    // Simulate processing delay for game feel
-    await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
-    return this._verifyDocumentGameLogic(type, file);
+    try {
+      const base64 = await this._fileToBase64(file);
+      const prompt = this._getVerificationPrompt(type);
+
+      const response = await fetch(`${OLLAMA_BASE_URL}/api/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: this._ollamaModel,
+          prompt,
+          images: [base64],
+          stream: false,
+          options: { temperature: 0.1 },
+        }),
+      });
+
+      if (!response.ok) throw new Error('Ollama request failed');
+      const data = await response.json();
+      return this._parseOllamaResponse(data.response, type);
+    } catch (err) {
+      console.warn(`Ollama verification failed for ${type}, falling back to game logic`, err);
+      // Fallback if Ollama is down (for game flow)
+      return this._verifyDocumentGameLogic(type, file);
+    }
   }
 
   /**
@@ -39,10 +69,99 @@ export class DocumentVerifier {
    * @returns {Promise<Array<{ type: string, valid: boolean, issues: string[] }>>}
    */
   async verifyAll(docs) {
-    return this._verifyWithGameLogic(docs);
+    const results = [];
+    for (const [type, file] of Object.entries(docs)) {
+      results.push(await this.verifySingle(type, file));
+    }
+    return results;
   }
 
-  // ─── Game Logic Strategy ──────────────────────────────────────────
+  _getVerificationPrompt(type) {
+    const prompts = {
+      passport: `Analyze this image and determine if it resembles a passport document.
+Check for:
+1. Does it look like a passport data page (contains a photo, personal details area)?
+2. Do not check specific IDs, just the general layout.
+
+Respond in this EXACT JSON format only, no other text or explanation:
+{"valid": true/false, "issues": ["issue1", "issue2"]}
+
+If valid, issues should be an empty array. If not valid, list specific layout problems quickly.`,
+
+      proof_of_address: `Analyze this image and determine if it resembles a proof of address document (like a utility bill, bank statement, or official letter).
+Check for:
+1. Does it look like an official document containing text, an address block, and perhaps a logo/header?
+
+Respond in this EXACT JSON format only, no other text or explanation:
+{"valid": true/false, "issues": ["issue1", "issue2"]}
+
+If valid, issues should be an empty array. If not valid, list specific layout problems quickly.`,
+
+      selfie: `Analyze this image and determine if it is a valid human selfie for identity verification.
+Check for:
+1. Does it clearly show a human face?
+
+Respond in this EXACT JSON format only, no other text or explanation:
+{"valid": true/false, "issues": ["issue1", "issue2"]}
+
+If valid, issues should be an empty array. If not valid, list specific problems quickly.`,
+    };
+    return prompts[type] || prompts.passport;
+  }
+
+  _parseOllamaResponse(response, type) {
+    console.log(`Ollama Response for ${type}:`, response);
+
+    try {
+      // Try to extract JSON from the response (in case Qwen adds markdown blocks)
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        return {
+          type,
+          valid: Boolean(parsed.valid),
+          issues: Array.isArray(parsed.issues) ? parsed.issues : [],
+        };
+      }
+    } catch {
+      // If parsing fails, try keyword detection
+    }
+
+    // Fallback: check for positive/negative keywords
+    const lower = response.toLowerCase();
+    const isValid = lower.includes('"valid": true') || (lower.includes('valid') && !lower.includes('not valid') && !lower.includes('invalid'));
+    return {
+      type,
+      valid: isValid,
+      issues: isValid ? [] : ['Document layout could not be verified'],
+    };
+  }
+
+  async _fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        const dataUrl = canvas.toDataURL(file.type || 'image/jpeg');
+        const base64 = dataUrl.split(',')[1];
+        resolve(base64);
+      };
+      img.onerror = reject;
+      
+      const reader = new FileReader();
+      reader.onload = () => {
+        img.src = reader.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ─── Game Logic Strategy (Fallback) ───────────────────────────────
 
   async _verifyWithGameLogic(docs) {
     // Simulate processing delay for game feel

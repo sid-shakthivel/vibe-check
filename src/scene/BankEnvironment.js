@@ -253,8 +253,89 @@ export class BankEnvironment {
       metalness: 0.6,
     });
     const nameplate = new THREE.Mesh(nameplateGeo, nameplateMat);
-    nameplate.position.set(0.3, 1.11, 0.5);
+    nameplate.position.set(0.4, 1.11, 0.5);
     this.group.add(nameplate);
+
+    // Piggy Bank
+    const piggyMat = new THREE.MeshStandardMaterial({
+      color: 0xffadc9, // Cute pink
+      roughness: 0.4,
+      metalness: 0.1,
+    });
+    // Body
+    const piggyGeo = new THREE.SphereGeometry(0.18, 16, 16);
+    const piggy = new THREE.Mesh(piggyGeo, piggyMat);
+    piggy.position.set(-1.4, 1.25, 0.2);
+    piggy.scale.set(1.2, 1, 1);
+    this.group.add(piggy);
+    
+    // Piggy snout
+    const snoutGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.08, 12);
+    const snout = new THREE.Mesh(snoutGeo, piggyMat);
+    snout.rotation.z = Math.PI / 2;
+    snout.position.set(-1.25, 1.25, 0.2);
+    this.group.add(snout);
+
+    // Piggy ears
+    const earGeo = new THREE.ConeGeometry(0.04, 0.08, 4);
+    const leftEar = new THREE.Mesh(earGeo, piggyMat);
+    leftEar.position.set(-1.3, 1.4, 0.1);
+    leftEar.rotation.x = -Math.PI / 8;
+    this.group.add(leftEar);
+    const rightEar = new THREE.Mesh(earGeo, piggyMat);
+    rightEar.position.set(-1.3, 1.4, 0.3);
+    rightEar.rotation.x = Math.PI / 8;
+    this.group.add(rightEar);
+
+    // Rubber Stamp
+    const stampBaseMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.7 });
+    const stampHandleMat = new THREE.MeshStandardMaterial({ color: 0x8b0000, roughness: 0.4 }); // Dark red handle
+    
+    const stampBaseGeo = new THREE.BoxGeometry(0.15, 0.05, 0.1);
+    const stampBase = new THREE.Mesh(stampBaseGeo, stampBaseMat);
+    stampBase.position.set(0.9, 1.075, 0.5);
+    this.group.add(stampBase);
+
+    const stampHandleGeo = new THREE.CylinderGeometry(0.02, 0.03, 0.15, 12);
+    const stampHandle = new THREE.Mesh(stampHandleGeo, stampHandleMat);
+    stampHandle.position.set(0.9, 1.17, 0.5);
+    this.group.add(stampHandle);
+
+    // Ink Pad
+    const inkPadBoxGeo = new THREE.BoxGeometry(0.25, 0.04, 0.15);
+    const inkPadBox = new THREE.Mesh(inkPadBoxGeo, stampBaseMat);
+    inkPadBox.position.set(1.2, 1.07, 0.5);
+    this.group.add(inkPadBox);
+
+    const inkGeo = new THREE.PlaneGeometry(0.2, 0.1);
+    const inkMat = new THREE.MeshStandardMaterial({ color: 0x8b0000, roughness: 0.2 }); // Red ink
+    const ink = new THREE.Mesh(inkGeo, inkMat);
+    ink.rotation.x = -Math.PI / 2;
+    ink.position.set(1.2, 1.091, 0.5);
+    this.group.add(ink);
+
+    // Calculator / Adding Machine
+    const calcMat = new THREE.MeshStandardMaterial({ color: 0xdcd6bc, roughness: 0.8 });
+    const calcGeo = new THREE.BoxGeometry(0.3, 0.15, 0.4);
+    const calc = new THREE.Mesh(calcGeo, calcMat);
+    calc.position.set(-1.4, 1.12, 0.7);
+    // Slope the calculator
+    calc.rotation.x = Math.PI / 12;
+    this.group.add(calc);
+
+    // More scattered documents
+    const whiteDocMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 });
+    const yellowDocMat = new THREE.MeshStandardMaterial({ color: 0xfdf7d5, roughness: 0.9 }); // Manilla folder color
+    
+    const doc1 = new THREE.Mesh(paperGeo, whiteDocMat);
+    doc1.position.set(0.2, 1.06, 0.3);
+    doc1.rotation.y = 0.2;
+    this.group.add(doc1);
+
+    const doc2 = new THREE.Mesh(paperGeo, yellowDocMat);
+    doc2.position.set(0.3, 1.07, 0.3);
+    doc2.rotation.y = -0.1;
+    this.group.add(doc2);
   }
 
   _createChair() {

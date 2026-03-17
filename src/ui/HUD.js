@@ -38,7 +38,7 @@ export class HUD {
   }
 
   setAttempts(n) {
-    this.attemptCountEl.textContent = n;
+    // this.attemptCountEl.textContent = n;
   }
 
   showReviewing() {
@@ -51,11 +51,10 @@ export class HUD {
 
   showApproved() {
     this.resultOverlay.classList.remove('hidden');
-    this.resultIcon.textContent = '🎉';
     this.resultTitle.textContent = 'KYC APPROVED';
     this.resultTitle.className = 'approved';
-    this.resultMessage.textContent = 'Congratulations! Your identity has been verified. Welcome to First National Bank.';
-    this.resultBtn.textContent = 'Play Again';
+    this.resultMessage.textContent = 'Congratulations! Your identity has been verified. Welcome to Vibe Bank.';
+    this.resultBtn.textContent = 'Restart';
     this.resultBtn.className = 'win';
   }
 
