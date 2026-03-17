@@ -130,7 +130,7 @@ export class BankEnvironment {
     ctx.font = 'bold 36px Inter, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('FIRST NATIONAL BANK', 256, 64);
+    ctx.fillText('VIBE BANK', 256, 64);
     const textTexture = new THREE.CanvasTexture(canvas);
     const textGeo = new THREE.PlaneGeometry(3.8, 0.7);
     const textMat = new THREE.MeshBasicMaterial({ map: textTexture, transparent: true });
