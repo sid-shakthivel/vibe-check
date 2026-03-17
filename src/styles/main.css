@@ -674,3 +674,119 @@ body {
   30%, 50%, 70% { transform: translate3d(-12px, 8px, 0); }
   40%, 60% { transform: translate3d(12px, -8px, 0); }
 }
+
+/* ========================================
+   Mobile Responsive
+   ======================================== */
+@media (max-width: 768px) {
+  /* Intro & Result Modals */
+  #intro-content, #result-content {
+    padding: 24px;
+    width: 90%;
+  }
+  
+  #intro-content h1 {
+    font-size: 1.8rem;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+  }
+  
+  #intro-content p {
+    font-size: 0.95rem;
+  }
+  
+  #result-title {
+    font-size: 1.5rem;
+  }
+
+  /* HUD */
+  #hud {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+  
+  #hud-title, #hud-attempts {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    border-width: 2px;
+  }
+
+  /* Document Panel */
+  #document-panel {
+    top: 60px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+    max-height: calc(100vh - 180px); /* Leave room for dialogue box */
+    padding: 16px;
+    border-width: 2px;
+    margin: 0 auto;
+    max-width: 400px; /* still constrain on large phones */
+  }
+  
+  #document-panel h2 {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+  
+  .step-num {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+    border-width: 2px;
+  }
+  
+  .step-connector {
+    margin-bottom: 20px;
+  }
+  
+  .doc-slot {
+    padding: 12px;
+    border-width: 2px;
+  }
+
+  .doc-icon {
+    font-size: 1.5rem;
+  }
+  
+  #submit-docs-btn {
+    padding: 10px;
+    margin-top: 12px;
+    font-size: 0.85rem;
+  }
+
+  /* Dialogue Box */
+  #dialogue-box {
+    bottom: 10px;
+    padding: 16px;
+    width: 95%;
+    border-width: 2px;
+  }
+  
+  #dialogue-speaker {
+    font-size: 0.7rem;
+    margin-bottom: 6px;
+  }
+  
+  #dialogue-text {
+    font-size: 0.85rem;
+    min-height: auto;
+    line-height: 1.4;
+  }
+  
+  #dialogue-next {
+    margin-top: 10px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+  }
+  
+  /* Stamp */
+  #dramatic-stamp {
+    font-size: 3.5rem;
+    padding: 0.5rem 1.5rem;
+    border-width: 6px;
+    letter-spacing: 0.2rem;
+  }
+}

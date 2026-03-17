@@ -47,8 +47,8 @@ export class BankManager {
     this.torso.castShadow = true;
     this.group.add(this.torso);
 
-    // Shirt collar area (narrower and shorter)
-    const collarGeo = new THREE.CylinderGeometry(0.14, 0.16, 0.04, 10);
+    // Shirt collar area (very subtle now)
+    const collarGeo = new THREE.CylinderGeometry(0.12, 0.14, 0.03, 10);
     const collar = new THREE.Mesh(collarGeo, shirtMat);
     collar.position.y = 1.76;
     this.group.add(collar);
@@ -193,8 +193,8 @@ export class BankManager {
     this.pencil = new THREE.Mesh(pencilGeo, pencilMat);
     // Position relative to the arm, near the hand end
     this.pencil.position.set(0.02, -0.32, 0.08); 
-    this.pencil.rotation.x = Math.PI / 2.5;
     this.pencil.rotation.z = Math.PI / 6;
+    this.pencil.visible = false; // Hide by default
     this.rightArm.add(this.pencil); // Attach directly to arm!
 
     // Pencil tip
@@ -235,6 +235,7 @@ export class BankManager {
 
     switch (this._animationState) {
       case 'idle':
+        this.pencil.visible = false;
         // Subtle breathing / bobbing
         this.torso.position.y = 1.35 + Math.sin(elapsed * 1.5) * 0.01;
         this.head.position.y = 2.0 + Math.sin(elapsed * 1.5) * 0.01;
@@ -242,6 +243,7 @@ export class BankManager {
         break;
 
       case 'nod':
+        this.pencil.visible = false;
         // Approving nod
         this.head.rotation.x = Math.sin(this._animTimer * 6) * 0.15;
         if (this._animTimer > 1.5) {
@@ -251,6 +253,7 @@ export class BankManager {
         break;
 
       case 'shake':
+        this.pencil.visible = false;
         // Disapproving head shake
         this.head.rotation.y = Math.sin(this._animTimer * 8) * 0.2;
         if (this._animTimer > 1.5) {
@@ -260,6 +263,7 @@ export class BankManager {
         break;
 
       case 'thinking':
+        this.pencil.visible = true;
         // Tilt head and look down at papers
         this.head.rotation.x = 0.1;
         this.head.rotation.z = Math.sin(elapsed * 2) * 0.05;
@@ -267,6 +271,7 @@ export class BankManager {
         break;
 
       case 'writing':
+        this.pencil.visible = true;
         // Lean over the desk and move right arm back and forth rapidly
         this.torso.rotation.x = 0.15; // Lean forward
         this.head.rotation.x = 0.25;  // Look down
@@ -278,6 +283,7 @@ export class BankManager {
         break;
 
       case 'welcome':
+        this.pencil.visible = false;
         // Small wave / open arms gesture
         this.leftArm.rotation.z = 0.15 + Math.sin(this._animTimer * 3) * 0.2;
         this.rightArm.rotation.z = -0.15 - Math.sin(this._animTimer * 3) * 0.2;

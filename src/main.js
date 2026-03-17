@@ -115,6 +115,7 @@ gameState.on('stateChange', async ({ from, to, data }) => {
 
     case 'REVIEWING_STEP': {
       docPanel.hide();
+      hud.hideDramaticRejection(); // Safety: make sure old rejection stamp is gone
       audioManager.playStamp(); // Dramatic thud when submitting
       bankManager.setAnimation('writing');
 
@@ -146,6 +147,7 @@ gameState.on('stateChange', async ({ from, to, data }) => {
     }
 
     case 'STEP_APPROVED': {
+      hud.hideDramaticRejection(); // Safety
       bankManager.setAnimation('nod');
       audioManager.playSuccess(); // Pleasant chime
 
