@@ -33,6 +33,40 @@ verifier.checkOllamaAvailability().then((available) => {
   console.log(`Ollama vision model: ${available ? 'AVAILABLE (' + verifier._ollamaModel + ')' : 'not found, using game logic'}`);
 });
 
+// ─── Step-specific dialogue ────────────────────────────────────────
+
+const STEP_INTRO_DIALOGUE = {
+  passport: [
+    'Let\'s start with your Passport.',
+    'Please upload a clear photo of your passport for identity verification.',
+  ],
+  proof_of_address: [
+    'Great, your passport looks good so far.',
+    'Now I\'ll need a Proof of Address — a utility bill, bank statement, or similar document.',
+    'Please upload it when you\'re ready.',
+  ],
+  selfie: [
+    'Excellent! Almost done.',
+    'Finally, I\'ll need a clear Selfie of yourself for facial recognition matching.',
+    'Make sure your face is clearly visible and well-lit.',
+  ],
+};
+
+const STEP_RETRY_DIALOGUE = {
+  passport: [
+    'I\'m afraid there were issues with your passport.',
+    'Please upload a corrected passport photo.',
+  ],
+  proof_of_address: [
+    'There were problems with your proof of address.',
+    'Please upload a new proof of address document.',
+  ],
+  selfie: [
+    'Your selfie didn\'t pass verification.',
+    'Please take and upload a new selfie.',
+  ],
+};
+
 // ─── Game Flow ─────────────────────────────────────────────────────
 
 hud.onStart(async () => {
@@ -42,11 +76,11 @@ hud.onStart(async () => {
   await dialogueBox.showDialogue([
     'Good morning. Welcome to First National Bank.',
     'I\'m the branch manager. I\'ll be handling your KYC verification today.',
-    'To open your account, I\'ll need three documents from you:',
+    'To open your account, I\'ll need three documents from you — one at a time:',
     '1. Your Passport — for identity verification.',
     '2. A Proof of Address — a utility bill or bank statement.',
     '3. A clear Selfie — for facial recognition matching.',
-    'Please upload each document when you\'re ready. Take your time.',
+    'Let\'s get started.',
   ]);
 
   gameState.startGame();
@@ -55,94 +89,123 @@ hud.onStart(async () => {
 // Listen for state changes and drive the UI
 gameState.on('stateChange', async ({ from, to, data }) => {
   switch (to) {
-    case 'DOCUMENT_SUBMISSION':
-      docPanel.show();
+    case 'DOCUMENT_SUBMISSION': {
+      const docType = gameState.getCurrentDocType();
       hud.setAttempts(gameState.attempts);
-      if (from === 'REJECTED') {
-        bankManager.setAnimation('idle');
-        await dialogueBox.showDialogue([
-          'Let\'s try again. Please upload corrected documents.',
-          'Make sure all documents are clear and valid.',
-        ]);
-      }
-      break;
 
-    case 'REVIEWING':
+      // Show contextual dialogue
+      if (from === 'STEP_REJECTED') {
+        bankManager.setAnimation('idle');
+        await dialogueBox.showDialogue(STEP_RETRY_DIALOGUE[docType]);
+      } else if (from !== 'INTRO') {
+        // Advancing from a previous approved step
+        bankManager.setAnimation('idle');
+        await dialogueBox.showDialogue(STEP_INTRO_DIALOGUE[docType]);
+      } else {
+        // First step (coming from INTRO via startGame)
+        await dialogueBox.showDialogue(STEP_INTRO_DIALOGUE[docType]);
+      }
+
+      docPanel.show();
+      break;
+    }
+
+    case 'REVIEWING_STEP': {
       docPanel.hide();
-      hud.showReviewing();
       bankManager.setAnimation('thinking');
 
+      const docLabel = gameState.getCurrentDocLabel();
       await dialogueBox.showDialogue([
-        'Thank you. Let me review these documents...',
+        `Thank you. Let me review your ${docLabel}...`,
       ]);
 
-      // Perform verification
+      // Show reviewing overlay AFTER dialogue is dismissed (overlay has higher z-index)
+      hud.showReviewing();
+
+      // Verify the single document
       try {
-        const results = await verifier.verifyAll(gameState.documents);
+        const docType = gameState.getCurrentDocType();
+        const file = gameState.documents[docType];
+        const result = await verifier.verifySingle(docType, file);
         hud.hideReviewing();
-        gameState.setVerificationResults(results);
+        gameState.setStepResult(result);
       } catch (err) {
         console.error('Verification error:', err);
         hud.hideReviewing();
-        gameState.setVerificationResults([
-          { type: 'passport', valid: false, issues: ['Verification system error'] },
-          { type: 'proof_of_address', valid: false, issues: ['Verification system error'] },
-          { type: 'selfie', valid: false, issues: ['Verification system error'] },
-        ]);
+        gameState.setStepResult({
+          type: gameState.getCurrentDocType(),
+          valid: false,
+          issues: ['Verification system error'],
+        });
       }
       break;
+    }
 
-    case 'APPROVED':
+    case 'STEP_APPROVED': {
       bankManager.setAnimation('nod');
 
-      await dialogueBox.showDialogue([
-        'Excellent! All your documents have been verified successfully.',
-        'Your KYC process is now complete. Welcome aboard!',
-      ]);
+      const docLabel = gameState.getCurrentDocLabel();
+      const isLastStep = gameState.currentStep >= GameState.DOC_STEPS.length - 1;
 
-      hud.showApproved();
+      // Briefly show the approved result on the panel
+      docPanel.show();
+      docPanel.showStepResult(data);
+
+      if (isLastStep) {
+        await dialogueBox.showDialogue([
+          `Your ${docLabel} has been verified. ✓`,
+          'All three documents have been approved!',
+          'Your KYC process is now complete. Welcome aboard!',
+        ]);
+        docPanel.hide();
+        hud.showApproved();
+      } else {
+        await dialogueBox.showDialogue([
+          `Your ${docLabel} has been verified successfully. ✓`,
+          'Let\'s move on to the next document.',
+        ]);
+        docPanel.hide();
+        gameState.advanceStep();
+      }
       break;
+    }
 
-    case 'REJECTED': {
+    case 'STEP_REJECTED': {
       bankManager.setAnimation('shake');
 
-      // Gather all issues from the results
-      const allIssues = data
-        .filter(r => !r.valid)
-        .flatMap(r => r.issues.map(issue => `${formatDocType(r.type)}: ${issue}`));
+      const docLabel = gameState.getCurrentDocLabel();
+      const issues = data.issues.map(i => `• ${docLabel}: ${i}`);
 
-      // Show results on the document panel briefly
+      // Show rejection on the panel
       docPanel.show();
-      docPanel.showResults(data);
+      docPanel.showStepResult(data);
 
-      const issueLines = allIssues.map(i => `• ${i}`);
       await dialogueBox.showDialogue([
-        'I\'m sorry, but there are issues with your documents.',
-        ...issueLines,
-        'Please correct these issues and resubmit.',
+        `I'm sorry, but there are issues with your ${docLabel}.`,
+        ...issues,
+        'Please correct this and resubmit.',
       ]);
 
       docPanel.hide();
-      hud.showRejected(allIssues);
+      hud.showRejected(issues);
       break;
     }
+
+    case 'APPROVED':
+      // Handled inline in STEP_APPROVED for the last step
+      break;
   }
 });
 
 // Result overlay actions (retry / play again)
 hud.onResultAction(() => {
   hud.hideResult();
-  if (gameState.state === 'REJECTED') {
-    gameState.retry();
+  if (gameState.state === 'STEP_REJECTED') {
+    gameState.retryCurrentStep();
   } else {
     // Play again — full reset
-    gameState.attempts = 1;
-    gameState.documents = { passport: null, proof_of_address: null, selfie: null };
-    gameState.verificationResults = null;
-    gameState.state = 'INTRO';
+    gameState.reset();
     hud.setAttempts(1);
-
-    // Show intro again
     document.getElementById('intro-overlay').classList.remove('hidden');
   }
 });

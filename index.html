@@ -26,42 +26,34 @@
     <button id="dialogue-next">Continue ▸</button>
   </div>
 
-  <!-- Document Panel -->
+  <!-- Document Panel (single-step) -->
   <div id="document-panel" class="hidden">
-    <h2>Submit Your KYC Documents</h2>
-    <div id="doc-slots">
-      <div class="doc-slot" data-doc="passport">
-        <div class="doc-icon">🛂</div>
-        <div class="doc-label">Passport</div>
-        <input type="file" accept="image/*" class="doc-input" id="input-passport" />
-        <label for="input-passport" class="doc-upload-btn">Upload</label>
-        <div class="doc-preview hidden"></div>
-        <div class="doc-status"></div>
-      </div>
-      <div class="doc-slot" data-doc="proof_of_address">
-        <div class="doc-icon">🏠</div>
-        <div class="doc-label">Proof of Address</div>
-        <input type="file" accept="image/*" class="doc-input" id="input-address" />
-        <label for="input-address" class="doc-upload-btn">Upload</label>
-        <div class="doc-preview hidden"></div>
-        <div class="doc-status"></div>
-      </div>
-      <div class="doc-slot" data-doc="selfie">
-        <div class="doc-icon">🤳</div>
-        <div class="doc-label">Selfie</div>
-        <input type="file" accept="image/*" class="doc-input" id="input-selfie" />
-        <label for="input-selfie" class="doc-upload-btn">Upload</label>
-        <div class="doc-preview hidden"></div>
-        <div class="doc-status"></div>
-      </div>
+    <div id="step-progress">
+      <div class="step-dot" data-step="0"><span class="step-num">1</span><span class="step-label">Passport</span></div>
+      <div class="step-connector"></div>
+      <div class="step-dot" data-step="1"><span class="step-num">2</span><span class="step-label">Address</span></div>
+      <div class="step-connector"></div>
+      <div class="step-dot" data-step="2"><span class="step-num">3</span><span class="step-label">Selfie</span></div>
     </div>
-    <button id="submit-docs-btn" class="hidden">Submit Documents</button>
+
+    <h2 id="doc-panel-title">Submit Your Passport</h2>
+
+    <div id="doc-slot-single" class="doc-slot">
+      <div class="doc-icon" id="single-doc-icon">🛂</div>
+      <div class="doc-label" id="single-doc-label">Passport</div>
+      <input type="file" accept="image/*" class="doc-input" id="input-single-doc" />
+      <label for="input-single-doc" class="doc-upload-btn" id="single-upload-btn">Upload</label>
+      <div class="doc-preview hidden" id="single-doc-preview"></div>
+      <div class="doc-status" id="single-doc-status"></div>
+    </div>
+
+    <button id="submit-docs-btn" class="hidden">Submit Passport</button>
   </div>
 
   <!-- Reviewing Overlay -->
   <div id="reviewing-overlay" class="hidden">
     <div id="reviewing-spinner"></div>
-    <div id="reviewing-text">Bank Manager is reviewing your documents...</div>
+    <div id="reviewing-text">Bank Manager is reviewing your document...</div>
   </div>
 
   <!-- Result Overlay -->
@@ -79,7 +71,7 @@
     <div id="intro-content">
       <h1>KYC CHECKPOINT</h1>
       <p>Welcome to First National Bank.<br/>You must submit your documents for identity verification.</p>
-      <p class="intro-sub">The bank manager will review your Passport, Proof of Address, and Selfie.</p>
+      <p class="intro-sub">The bank manager will review your Passport, Proof of Address, and Selfie — one at a time.</p>
       <button id="start-btn">Enter the Bank</button>
     </div>
   </div>

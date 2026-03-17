@@ -22,6 +22,8 @@ The application needs to verify the validity of the documents and check if they 
 
 Make no mistakes and do not make assumptions.
 
-sam.baston@icloud.com
-josephsumner06@gmail.com
-wpsy50@durham.ac.uk
+git commit -m "Restructured code flow
+
+Co-authored-by: Sam Barton <sam.baston@icloud.com>
+Co-authored-by: Joseph Sumner <josephsumner06@gmail.com>
+Co-authored-by: William Harrison <wpsy50@durham.ac.uk>"
