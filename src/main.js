@@ -131,7 +131,8 @@ gameState.on('stateChange', async ({ from, to, data }) => {
       try {
         const docType = gameState.getCurrentDocType();
         const file = gameState.documents[docType];
-        const result = await verifier.verifySingle(docType, file);
+        const referenceFile = docType === 'selfie' ? gameState.documents['passport'] : null;
+        const result = await verifier.verifySingle(docType, file, referenceFile);
         hud.hideReviewing();
         gameState.setStepResult(result);
       } catch (err) {

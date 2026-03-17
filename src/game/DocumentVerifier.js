@@ -30,16 +30,24 @@ export class DocumentVerifier {
    * Verify a single document.
    * @param {string} type - 'passport', 'proof_of_address', or 'selfie'
    * @param {File} file
+   * @param {File} [referenceFile=null] - Optional reference file (e.g. passport) to compare against
    * @returns {Promise<{ type: string, valid: boolean, issues: string[] }>}
    */
-  async verifySingle(type, file) {
+  async verifySingle(type, file, referenceFile = null) {
     if (!file) {
       return { type, valid: false, issues: ['No document uploaded'] };
     }
 
     try {
       const base64 = await this._fileToBase64(file);
-      const prompt = this._getVerificationPrompt(type);
+      const images = [base64];
+      
+      if (referenceFile) {
+        const refBase64 = await this._fileToBase64(referenceFile);
+        images.push(refBase64);
+      }
+      
+      const prompt = this._getVerificationPrompt(type, !!referenceFile);
 
       const response = await fetch(`${OLLAMA_BASE_URL}/api/generate`, {
         method: 'POST',
@@ -47,7 +55,7 @@ export class DocumentVerifier {
         body: JSON.stringify({
           model: this._ollamaModel,
           prompt,
-          images: [base64],
+          images: images,
           stream: false,
           options: { temperature: 0.1 },
         }),
@@ -76,7 +84,7 @@ export class DocumentVerifier {
     return results;
   }
 
-  _getVerificationPrompt(type) {
+  _getVerificationPrompt(type, hasReference = false) {
     const prompts = {
       passport: `Analyze this image and determine if it resembles a passport document.
 Check for:
@@ -97,7 +105,15 @@ Respond in this EXACT JSON format only, no other text or explanation:
 
 If valid, issues should be an empty array. If not valid, list specific layout problems quickly.`,
 
-      selfie: `Analyze this image and determine if it is a valid human selfie for identity verification.
+      selfie: hasReference 
+        ? `Analyze these two images. The first image is a selfie, and the second image is a passport data page.
+Determine if the first image is a valid human selfie, AND if the face in the selfie appears to be the same person as the photo in the passport.
+
+Respond in this EXACT JSON format only, no other text or explanation:
+{"valid": true/false, "issues": ["issue1", "issue2"]}
+
+If they appear to be the same person and it is a valid selfie, valid should be true and issues should be an empty array. If they do not match or it is not a valid selfie, list specific problems quickly.`
+        : `Analyze this image and determine if it is a valid human selfie for identity verification.
 Check for:
 1. Does it clearly show a human face?
 
