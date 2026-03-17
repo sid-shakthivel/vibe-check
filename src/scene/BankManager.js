@@ -13,18 +13,18 @@ export class BankManager {
   }
 
   _build() {
-    // Skin material
+    // Skin material - warmer tone
     const skinMat = new THREE.MeshStandardMaterial({
-      color: 0xd4a07a,
-      roughness: 0.7,
+      color: 0x8d5524, // Warmer, richer brown skin tone (matching image)
+      roughness: 0.6,
       metalness: 0.0,
     });
 
-    // Suit material (dark navy)
+    // Suit material (grey striped suit look)
     const suitMat = new THREE.MeshStandardMaterial({
-      color: 0x1a1f3a,
-      roughness: 0.6,
-      metalness: 0.1,
+      color: 0x737678, // Medium grey suit
+      roughness: 0.8,
+      metalness: 0.0,
     });
 
     // Shirt material
@@ -33,14 +33,15 @@ export class BankManager {
       roughness: 0.8,
     });
 
-    // Tie material
+    // Tie material (dark red/burgundy)
     const tieMat = new THREE.MeshStandardMaterial({
-      color: 0xb91c1c,
+      color: 0x8b0000,
       roughness: 0.5,
     });
 
     // --- BODY (torso) ---
-    const torsoGeo = new THREE.CylinderGeometry(0.28, 0.24, 0.8, 12);
+    // Make torso slightly wider/rounder for a friendlier, robust look
+    const torsoGeo = new THREE.CylinderGeometry(0.32, 0.28, 0.8, 12);
     this.torso = new THREE.Mesh(torsoGeo, suitMat);
     this.torso.position.y = 1.35;
     this.torso.castShadow = true;
@@ -53,16 +54,16 @@ export class BankManager {
     this.group.add(collar);
 
     // Tie
-    const tieGeo = new THREE.BoxGeometry(0.06, 0.4, 0.03);
+    const tieGeo = new THREE.BoxGeometry(0.08, 0.4, 0.03); // Slightly wider tie
     const tie = new THREE.Mesh(tieGeo, tieMat);
-    tie.position.set(0, 1.5, 0.22);
+    tie.position.set(0, 1.5, 0.24); // Adjusted out slightly for wider chest
     this.group.add(tie);
 
     // --- HEAD ---
-    const headGeo = new THREE.SphereGeometry(0.2, 16, 14);
+    // Make head slightly squarer/wider to match the plump face in the art
+    const headGeo = new THREE.BoxGeometry(0.42, 0.45, 0.4); 
     this.head = new THREE.Mesh(headGeo, skinMat);
     this.head.position.y = 2.0;
-    this.head.scale.set(1, 1.1, 1);
     this.head.castShadow = true;
     this.group.add(this.head);
 
@@ -71,11 +72,21 @@ export class BankManager {
       color: 0x2c2c2c,
       roughness: 0.9,
     });
-    const hairGeo = new THREE.SphereGeometry(0.21, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2);
+    // Hair covering the boxy top
+    const hairGeo = new THREE.BoxGeometry(0.44, 0.1, 0.42);
     const hair = new THREE.Mesh(hairGeo, hairMat);
-    hair.position.y = 2.02;
-    hair.scale.set(1, 1, 1);
+    hair.position.y = 2.22;
     this.group.add(hair);
+
+    // Braided hair buns on the sides
+    const bunGeo = new THREE.SphereGeometry(0.12, 12, 12);
+    const leftBun = new THREE.Mesh(bunGeo, hairMat);
+    leftBun.position.set(-0.25, 2.05, 0);
+    this.group.add(leftBun);
+    
+    const rightBun = new THREE.Mesh(bunGeo, hairMat);
+    rightBun.position.set(0.25, 2.05, 0);
+    this.group.add(rightBun);
 
     // Eyes
     const eyeMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3 });
@@ -108,37 +119,46 @@ export class BankManager {
       metalness: 0.6,
     });
     // Glasses bridge
-    const bridgeGeo = new THREE.CylinderGeometry(0.005, 0.005, 0.1, 6);
+    const bridgeGeo = new THREE.BoxGeometry(0.08, 0.01, 0.01);
     const bridge = new THREE.Mesh(bridgeGeo, glassMat);
-    bridge.position.set(0, 2.03, 0.19);
-    bridge.rotation.z = Math.PI / 2;
+    bridge.position.set(0, 2.05, 0.21);
     this.group.add(bridge);
 
     // Glasses rims (torus)
-    const rimGeo = new THREE.TorusGeometry(0.04, 0.005, 8, 16);
+    const rimGeo = new THREE.TorusGeometry(0.05, 0.008, 8, 16);
     const leftRim = new THREE.Mesh(rimGeo, glassMat);
-    leftRim.position.set(-0.07, 2.03, 0.19);
+    leftRim.position.set(-0.09, 2.05, 0.21);
     this.group.add(leftRim);
 
     const rightRim = new THREE.Mesh(rimGeo, glassMat);
-    rightRim.position.set(0.07, 2.03, 0.19);
+    rightRim.position.set(0.09, 2.05, 0.21);
     this.group.add(rightRim);
 
-    // Nose
-    const noseGeo = new THREE.SphereGeometry(0.025, 6, 6);
+    // Nose (wider, flatter)
+    const noseGeo = new THREE.BoxGeometry(0.06, 0.04, 0.02);
     const nose = new THREE.Mesh(noseGeo, skinMat);
-    nose.position.set(0, 1.97, 0.2);
+    nose.position.set(0, 1.95, 0.21);
     this.group.add(nose);
 
-    // Mouth (subtle)
-    const mouthMat = new THREE.MeshStandardMaterial({ color: 0xb07d62, roughness: 0.8 });
-    const mouthGeo = new THREE.BoxGeometry(0.06, 0.01, 0.01);
+    // Mouth (subtle smile)
+    const mouthMat = new THREE.MeshStandardMaterial({ color: 0x4a2e1b, roughness: 0.8 });
+    const mouthGeo = new THREE.BoxGeometry(0.12, 0.02, 0.02); // Wider for a smile
     this.mouth = new THREE.Mesh(mouthGeo, mouthMat);
-    this.mouth.position.set(0, 1.91, 0.19);
+    this.mouth.position.set(0, 1.88, 0.21);
+    
+    // Add a slight curve to the mouth by adding small cheek pieces
+    const cheekGeo = new THREE.BoxGeometry(0.02, 0.03, 0.02);
+    const leftCheek = new THREE.Mesh(cheekGeo, mouthMat);
+    leftCheek.position.set(-0.06, 1.89, 0.21);
+    const rightCheek = new THREE.Mesh(cheekGeo, mouthMat);
+    rightCheek.position.set(0.06, 1.89, 0.21);
+    
     this.group.add(this.mouth);
+    this.group.add(leftCheek);
+    this.group.add(rightCheek);
 
     // --- ARMS ---
-    const armGeo = new THREE.CylinderGeometry(0.06, 0.05, 0.55, 8);
+    const armGeo = new THREE.CylinderGeometry(0.07, 0.06, 0.55, 8); // Slightly thicker arms
 
     // Left arm
     this.leftArm = new THREE.Mesh(armGeo, suitMat);

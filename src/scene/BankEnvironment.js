@@ -18,12 +18,12 @@ export class BankEnvironment {
   }
 
   _createFloor() {
-    // Main floor — dark marble look
+    // Main floor — warm wood or linoleum look
     const floorGeo = new THREE.PlaneGeometry(14, 14);
     const floorMat = new THREE.MeshStandardMaterial({
-      color: 0x2c2c3e,
-      roughness: 0.3,
-      metalness: 0.1,
+      color: 0x8b7355, // Warm wooden floor color
+      roughness: 0.8,
+      metalness: 0.05,
     });
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
@@ -31,10 +31,10 @@ export class BankEnvironment {
     this.group.add(floor);
 
     // Floor trim / carpet under desk area
-    const carpetGeo = new THREE.PlaneGeometry(4, 6);
+    const carpetGeo = new THREE.PlaneGeometry(5, 7);
     const carpetMat = new THREE.MeshStandardMaterial({
-      color: 0x1a3a5c,
-      roughness: 0.8,
+      color: 0x6e7f60, // Lighter olive green carpet
+      roughness: 1.0,
     });
     const carpet = new THREE.Mesh(carpetGeo, carpetMat);
     carpet.rotation.x = -Math.PI / 2;
@@ -44,9 +44,9 @@ export class BankEnvironment {
 
   _createWalls() {
     const wallMat = new THREE.MeshStandardMaterial({
-      color: 0x1e2a3a,
-      roughness: 0.7,
-      metalness: 0.05,
+      color: 0x829074, // Lighter, warm olive green for walls (like the image)
+      roughness: 0.9,
+      metalness: 0.0,
     });
 
     // Back wall
@@ -74,8 +74,8 @@ export class BankEnvironment {
     // Ceiling
     const ceilingGeo = new THREE.PlaneGeometry(14, 14);
     const ceilingMat = new THREE.MeshStandardMaterial({
-      color: 0x1a1f2e,
-      roughness: 0.9,
+      color: 0xe8e4c9, // Warm cream ceiling
+      roughness: 1.0,
     });
     const ceiling = new THREE.Mesh(ceilingGeo, ceilingMat);
     ceiling.rotation.x = Math.PI / 2;
@@ -140,11 +140,11 @@ export class BankEnvironment {
   }
 
   _createDesk() {
-    // Main desk surface
+    // Main desk surface — lighter, warmer wood
     const deskMat = new THREE.MeshStandardMaterial({
-      color: 0x3d2b1f,
-      roughness: 0.4,
-      metalness: 0.1,
+      color: 0x6b4a31, // Warm brown wood
+      roughness: 0.7,
+      metalness: 0.0,
     });
 
     // Desktop
@@ -191,40 +191,40 @@ export class BankEnvironment {
 
   _createDeskItems() {
     const darkMat = new THREE.MeshStandardMaterial({
-      color: 0x1a1a2e,
-      roughness: 0.3,
-      metalness: 0.4,
+      color: 0xdcd6bc, // Cream/beige retro computer color
+      roughness: 0.8,
+      metalness: 0.1,
     });
 
     // Monitor
-    const monitorGeo = new THREE.BoxGeometry(0.8, 0.6, 0.05);
+    const monitorGeo = new THREE.BoxGeometry(0.8, 0.6, 0.4); // Thicker, older CRT style monitor
     const monitor = new THREE.Mesh(monitorGeo, darkMat);
-    monitor.position.set(-0.8, 1.45, -0.2);
+    monitor.position.set(-0.9, 1.45, -0.3);
     monitor.castShadow = true;
     this.group.add(monitor);
 
-    // Monitor screen (glowing)
+    // Monitor screen (retro green text on dark bg)
     const screenMat = new THREE.MeshStandardMaterial({
-      color: 0x1e40af,
-      emissive: 0x1e40af,
-      emissiveIntensity: 0.3,
-      roughness: 0.1,
+      color: 0x113311,
+      emissive: 0x225522,
+      emissiveIntensity: 0.8,
+      roughness: 0.5,
     });
     const screenGeo = new THREE.PlaneGeometry(0.7, 0.5);
     const screen = new THREE.Mesh(screenGeo, screenMat);
-    screen.position.set(-0.8, 1.45, -0.17);
+    screen.position.set(-0.9, 1.45, -0.09);
     this.group.add(screen);
 
     // Monitor stand
-    const standGeo = new THREE.CylinderGeometry(0.03, 0.08, 0.2, 8);
+    const standGeo = new THREE.BoxGeometry(0.4, 0.2, 0.3); // Blockier stand
     const stand = new THREE.Mesh(standGeo, darkMat);
-    stand.position.set(-0.8, 1.1, -0.2);
+    stand.position.set(-0.9, 1.1, -0.3);
     this.group.add(stand);
 
     // Keyboard
-    const kbGeo = new THREE.BoxGeometry(0.5, 0.02, 0.18);
+    const kbGeo = new THREE.BoxGeometry(0.5, 0.04, 0.2);
     const kb = new THREE.Mesh(kbGeo, darkMat);
-    kb.position.set(-0.8, 1.06, 0.15);
+    kb.position.set(-0.8, 1.07, 0.15);
     this.group.add(kb);
 
     // Pen holder
@@ -259,9 +259,9 @@ export class BankEnvironment {
 
   _createChair() {
     const chairMat = new THREE.MeshStandardMaterial({
-      color: 0x1a1a2e,
+      color: 0x5a4634, // Warm brown leather
       roughness: 0.6,
-      metalness: 0.2,
+      metalness: 0.1,
     });
 
     // Seat
@@ -310,9 +310,9 @@ export class BankEnvironment {
 
     // Filing cabinet on the right side
     const cabinetMat = new THREE.MeshStandardMaterial({
-      color: 0x374151,
-      roughness: 0.5,
-      metalness: 0.3,
+      color: 0x727d66, // Light olive/gray matching walls
+      roughness: 0.7,
+      metalness: 0.1,
     });
     const cabinetGeo = new THREE.BoxGeometry(0.7, 1.5, 0.5);
     const cabinet = new THREE.Mesh(cabinetGeo, cabinetMat);
@@ -354,40 +354,34 @@ export class BankEnvironment {
   }
 
   _createLighting() {
-    // Ambient — soft fill
-    const ambient = new THREE.AmbientLight(0x4a5568, 0.4);
+    // Ambient — brighter, warmer fill for a positive atmosphere
+    const ambient = new THREE.AmbientLight(0xfff5e6, 1.2);
     this.scene.add(ambient);
 
-    // Main overhead warm light
-    const mainLight = new THREE.PointLight(0xffd699, 1.5, 15);
-    mainLight.position.set(0, 4.5, 0);
+    // Main overhead warm light (like sunlight coming through a window)
+    const mainLight = new THREE.PointLight(0xffeedd, 2.5, 20);
+    mainLight.position.set(0, 4.5, 2);
     mainLight.castShadow = true;
     mainLight.shadow.mapSize.width = 1024;
     mainLight.shadow.mapSize.height = 1024;
+    mainLight.shadow.bias = -0.001;
     this.scene.add(mainLight);
 
-    // Desk spotlight
-    const deskSpot = new THREE.SpotLight(0xffeedd, 2, 8, Math.PI / 6, 0.5, 1.5);
-    deskSpot.position.set(0, 4, 1);
+    // Desk lamp light (warm, inviting)
+    const deskSpot = new THREE.SpotLight(0xffddaa, 2.5, 8, Math.PI / 4, 0.5, 1.0);
+    deskSpot.position.set(-1.5, 3, 1);
     deskSpot.target.position.set(0, 1, 0);
     deskSpot.castShadow = true;
     this.scene.add(deskSpot);
     this.scene.add(deskSpot.target);
 
-    // Accent lights for atmosphere
-    const accentLeft = new THREE.PointLight(0x3b82f6, 0.4, 8);
-    accentLeft.position.set(-4, 3, -2);
+    // Accent lights (warm bounces instead of sci-fi blue/purple)
+    const accentLeft = new THREE.PointLight(0xffeeba, 0.8, 8);
+    accentLeft.position.set(-4, 3, -1);
     this.scene.add(accentLeft);
 
-    const accentRight = new THREE.PointLight(0x6366f1, 0.3, 8);
-    accentRight.position.set(4, 3, -2);
+    const accentRight = new THREE.PointLight(0xfff0cc, 0.8, 8);
+    accentRight.position.set(4, 3, -1);
     this.scene.add(accentRight);
-
-    // Subtle backlight on the sign
-    const signLight = new THREE.SpotLight(0xd4a843, 1, 6, Math.PI / 8, 0.5, 2);
-    signLight.position.set(0, 4.8, -2);
-    signLight.target.position.set(0, 3.8, -4);
-    this.scene.add(signLight);
-    this.scene.add(signLight.target);
   }
 }

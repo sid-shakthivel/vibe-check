@@ -3,26 +3,26 @@
    ======================================== */
 
 :root {
-  --color-bg: #0a0e17;
-  --color-surface: rgba(15, 23, 42, 0.85);
-  --color-surface-hover: rgba(30, 41, 59, 0.9);
-  --color-border: rgba(100, 116, 139, 0.3);
-  --color-primary: #3b82f6;
-  --color-primary-glow: rgba(59, 130, 246, 0.4);
-  --color-success: #10b981;
+  --color-bg: #5d6653; /* Olive green wall */
+  --color-surface: rgba(69, 50, 40, 0.95); /* Dark brown wood desk UI */
+  --color-surface-hover: rgba(89, 66, 54, 0.95); /* Lighter brown */
+  --color-border: #9b8163; /* Tan border */
+  --color-primary: #bd8e51; /* Warm gold/tan button color */
+  --color-primary-glow: rgba(189, 142, 81, 0.4);
+  --color-success: #10b981; 
   --color-success-glow: rgba(16, 185, 129, 0.4);
-  --color-danger: #ef4444;
+  --color-danger: #ef4444; 
   --color-danger-glow: rgba(239, 68, 68, 0.4);
-  --color-warning: #f59e0b;
-  --color-text: #e2e8f0;
-  --color-text-muted: #94a3b8;
-  --color-gold: #d4a843;
-  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --color-warning: #f59e0b; 
+  --color-text: #e6dfc8; /* Warm paper / off-white text */
+  --color-text-muted: #bdae93; /* Muted tan text */
+  --color-gold: #fde047; /* Bright yellow/gold for accents */
+  --font-main: 'JetBrains Mono', 'Courier New', Courier, monospace; /* Change to monospaced/typewriter font for retro feel */
   --font-mono: 'JetBrains Mono', monospace;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --glass: blur(16px) saturate(180%);
+  --radius: 4px; /* Squarer corners for retro UI */
+  --radius-sm: 2px;
+  --shadow: 4px 4px 0px rgba(0, 0, 0, 0.5); /* Solid drop shadow for retro feel */
+  --glass: none; /* No glassmorphism */
 }
 
 *, *::before, *::after {
@@ -66,8 +66,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(10, 14, 23, 0.95), rgba(15, 23, 42, 0.95));
-  backdrop-filter: var(--glass);
+  background: rgba(93, 102, 83, 0.9); /* Olive green overlay */
   animation: fadeIn 0.6s ease-out;
 }
 
@@ -76,9 +75,9 @@ body {
   max-width: 520px;
   padding: 48px;
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
-  box-shadow: var(--shadow), 0 0 60px rgba(59, 130, 246, 0.1);
+  border: 4px solid var(--color-border); /* Thicker border */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
 #intro-content h1 {
@@ -105,23 +104,23 @@ body {
 #start-btn {
   margin-top: 28px;
   padding: 14px 40px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
   font-family: var(--font-main);
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #fff;
-  background: linear-gradient(135deg, var(--color-primary), #6366f1);
-  border: none;
+  color: #2b1f15; /* Dark brown text for contrast against gold */
+  background: var(--color-primary);
+  border: 2px solid #e6b85c;
   border-radius: var(--radius);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px var(--color-primary-glow);
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow);
 }
 
 #start-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 30px var(--color-primary-glow);
+  background: #deb06c;
 }
 
 /* ========================================
@@ -147,8 +146,7 @@ body {
   text-shadow: 0 0 20px rgba(212, 168, 67, 0.3);
   padding: 10px 20px;
   background: var(--color-surface);
-  backdrop-filter: var(--glass);
-  border: 1px solid var(--color-border);
+  border: 4px solid var(--color-border);
   border-radius: var(--radius-sm);
 }
 
@@ -159,8 +157,7 @@ body {
   color: var(--color-text-muted);
   padding: 10px 20px;
   background: var(--color-surface);
-  backdrop-filter: var(--glass);
-  border: 1px solid var(--color-border);
+  border: 4px solid var(--color-border);
   border-radius: var(--radius-sm);
 }
 
@@ -179,8 +176,7 @@ body {
   width: min(680px, calc(100% - 40px));
   z-index: 60;
   background: var(--color-surface);
-  backdrop-filter: var(--glass);
-  border: 1px solid var(--color-border);
+  border: 4px solid var(--color-border);
   border-radius: var(--radius);
   padding: 24px 28px;
   box-shadow: var(--shadow);
@@ -211,9 +207,9 @@ body {
   font-size: 0.85rem;
   font-weight: 600;
   font-family: var(--font-main);
-  color: var(--color-primary);
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: var(--color-text);
+  background: var(--color-surface-hover);
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -236,8 +232,7 @@ body {
   overflow-y: auto;
   z-index: 55;
   background: var(--color-surface);
-  backdrop-filter: var(--glass);
-  border: 1px solid var(--color-border);
+  border: 4px solid var(--color-border);
   border-radius: var(--radius);
   padding: 28px 24px;
   box-shadow: var(--shadow);
@@ -251,7 +246,7 @@ body {
   color: var(--color-text);
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 4px solid var(--color-border);
 }
 
 /* Step Progress Indicator */
@@ -283,23 +278,23 @@ body {
   font-weight: 700;
   font-family: var(--font-mono);
   background: rgba(30, 41, 59, 0.6);
-  border: 2px solid var(--color-border);
+  border: 4px solid var(--color-border);
   color: var(--color-text-muted);
   transition: all 0.4s ease;
 }
 
 .step-dot.active .step-num {
   border-color: var(--color-primary);
-  background: rgba(59, 130, 246, 0.15);
-  color: var(--color-primary);
-  box-shadow: 0 0 16px var(--color-primary-glow);
+  background: var(--color-primary);
+  color: #2b1f15;
+  box-shadow: none;
 }
 
 .step-dot.completed .step-num {
   border-color: var(--color-success);
-  background: rgba(16, 185, 129, 0.2);
-  color: var(--color-success);
-  box-shadow: 0 0 12px var(--color-success-glow);
+  background: var(--color-success);
+  color: #2b1f15;
+  box-shadow: none;
 }
 
 .step-dot.completed .step-num::after {
@@ -337,7 +332,7 @@ body {
 
 .step-connector {
   width: 36px;
-  height: 2px;
+  height: 4px;
   background: var(--color-border);
   margin: 0 4px;
   margin-bottom: 22px;
@@ -354,16 +349,16 @@ body {
 
 .doc-slot {
   padding: 18px;
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid var(--color-border);
+  background: rgba(30, 41, 59, 0.2);
+  border: 4px solid var(--color-border);
   border-radius: var(--radius-sm);
   text-align: center;
   transition: all 0.3s ease;
 }
 
 .doc-slot:hover {
-  border-color: rgba(59, 130, 246, 0.3);
-  background: rgba(30, 41, 59, 0.7);
+  border-color: var(--color-primary);
+  background: rgba(30, 41, 59, 0.4);
 }
 
 .doc-slot.uploaded {
@@ -398,9 +393,9 @@ body {
   font-size: 0.8rem;
   font-weight: 600;
   font-family: var(--font-main);
-  color: var(--color-primary);
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: var(--color-text);
+  background: var(--color-surface-hover);
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -452,18 +447,18 @@ body {
   font-family: var(--font-main);
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #fff;
-  background: linear-gradient(135deg, var(--color-success), #059669);
-  border: none;
+  color: #2b1f15;
+  background: var(--color-success);
+  border: 2px solid #0f766e;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 16px var(--color-success-glow);
+  box-shadow: var(--shadow);
 }
 
 #submit-docs-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 24px var(--color-success-glow);
+  transform: translateY(-2px);
+  background: #059669;
 }
 
 /* ========================================
@@ -477,15 +472,14 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(10, 14, 23, 0.8);
-  backdrop-filter: var(--glass);
+  background: rgba(93, 102, 83, 0.9);
 }
 
 #reviewing-spinner {
   width: 56px;
   height: 56px;
-  border: 3px solid var(--color-border);
-  border-top-color: var(--color-primary);
+  border: 6px solid var(--color-border);
+  border-top-color: var(--color-gold);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 24px;
@@ -508,8 +502,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(10, 14, 23, 0.9);
-  backdrop-filter: var(--glass);
+  background: rgba(93, 102, 83, 0.9);
   animation: fadeIn 0.5s ease-out;
 }
 
@@ -518,8 +511,8 @@ body {
   max-width: 480px;
   padding: 48px;
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
+  border: 4px solid var(--color-border);
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
   animation: scaleIn 0.5s ease-out;
 }
@@ -560,20 +553,22 @@ body {
   letter-spacing: 1px;
   text-transform: uppercase;
   color: #fff;
-  border: none;
+  border: 2px solid var(--color-border);
   border-radius: var(--radius);
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: var(--shadow);
 }
 
 #result-btn.retry {
-  background: linear-gradient(135deg, var(--color-danger), #dc2626);
-  box-shadow: 0 4px 20px var(--color-danger-glow);
+  background: var(--color-danger);
+  border-color: #991b1b;
 }
 
 #result-btn.win {
-  background: linear-gradient(135deg, var(--color-success), #059669);
-  box-shadow: 0 4px 20px var(--color-success-glow);
+  color: #2b1f15;
+  background: var(--color-success);
+  border-color: #0f766e;
 }
 
 #result-btn:hover {
