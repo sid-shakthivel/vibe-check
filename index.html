@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Papers Please style KYC bank verification game built with Three.js" />
+  <title>KYC Checkpoint — Bank Verification Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles/main.css" />
+</head>
+<body>
+  <canvas id="game-canvas"></canvas>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div id="hud-title">KYC CHECKPOINT</div>
+    <div id="hud-attempts">Attempt: <span id="attempt-count">1</span></div>
+  </div>
+
+  <!-- Dialogue Box -->
+  <div id="dialogue-box" class="hidden">
+    <div id="dialogue-speaker">Bank Manager</div>
+    <div id="dialogue-text"></div>
+    <button id="dialogue-next">Continue ▸</button>
+  </div>
+
+  <!-- Document Panel -->
+  <div id="document-panel" class="hidden">
+    <h2>Submit Your KYC Documents</h2>
+    <div id="doc-slots">
+      <div class="doc-slot" data-doc="passport">
+        <div class="doc-icon">🛂</div>
+        <div class="doc-label">Passport</div>
+        <input type="file" accept="image/*" class="doc-input" id="input-passport" />
+        <label for="input-passport" class="doc-upload-btn">Upload</label>
+        <div class="doc-preview hidden"></div>
+        <div class="doc-status"></div>
+      </div>
+      <div class="doc-slot" data-doc="proof_of_address">
+        <div class="doc-icon">🏠</div>
+        <div class="doc-label">Proof of Address</div>
+        <input type="file" accept="image/*" class="doc-input" id="input-address" />
+        <label for="input-address" class="doc-upload-btn">Upload</label>
+        <div class="doc-preview hidden"></div>
+        <div class="doc-status"></div>
+      </div>
+      <div class="doc-slot" data-doc="selfie">
+        <div class="doc-icon">🤳</div>
+        <div class="doc-label">Selfie</div>
+        <input type="file" accept="image/*" class="doc-input" id="input-selfie" />
+        <label for="input-selfie" class="doc-upload-btn">Upload</label>
+        <div class="doc-preview hidden"></div>
+        <div class="doc-status"></div>
+      </div>
+    </div>
+    <button id="submit-docs-btn" class="hidden">Submit Documents</button>
+  </div>
+
+  <!-- Reviewing Overlay -->
+  <div id="reviewing-overlay" class="hidden">
+    <div id="reviewing-spinner"></div>
+    <div id="reviewing-text">Bank Manager is reviewing your documents...</div>
+  </div>
+
+  <!-- Result Overlay -->
+  <div id="result-overlay" class="hidden">
+    <div id="result-content">
+      <div id="result-icon"></div>
+      <h1 id="result-title"></h1>
+      <div id="result-message"></div>
+      <button id="result-btn"></button>
+    </div>
+  </div>
+
+  <!-- Intro Overlay -->
+  <div id="intro-overlay">
+    <div id="intro-content">
+      <h1>KYC CHECKPOINT</h1>
+      <p>Welcome to First National Bank.<br/>You must submit your documents for identity verification.</p>
+      <p class="intro-sub">The bank manager will review your Passport, Proof of Address, and Selfie.</p>
+      <button id="start-btn">Enter the Bank</button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
