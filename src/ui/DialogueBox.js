@@ -2,7 +2,8 @@
  * DialogueBox — manages the RPG-style dialogue box at the bottom of the screen.
  */
 export class DialogueBox {
-  constructor() {
+  constructor(audioManager) {
+    this.audioManager = audioManager;
     this.el = document.getElementById('dialogue-box');
     this.textEl = document.getElementById('dialogue-text');
     this.speakerEl = document.getElementById('dialogue-speaker');
@@ -44,6 +45,12 @@ export class DialogueBox {
   _typeText(text, index) {
     if (index <= text.length) {
       this.textEl.textContent = text.substring(0, index);
+      
+      // Play typewriter sound every 2 characters for a rapid but not overwhelming effect
+      if (this.audioManager && index % 2 === 0) {
+        this.audioManager.playTypewriter();
+      }
+
       this._typeTimeout = setTimeout(() => this._typeText(text, index + 1), 25);
       this._typing = true;
       this._fullText = text;

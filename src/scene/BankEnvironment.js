@@ -238,12 +238,33 @@ export class BankEnvironment {
     penHolder.position.set(1.2, 1.11, -0.1);
     this.group.add(penHolder);
 
-    // Paper stack
-    const paperMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.9 });
+    // Paper stack (side)
+    const paperMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, side: THREE.DoubleSide });
     const paperGeo = new THREE.BoxGeometry(0.3, 0.04, 0.4);
     const papers = new THREE.Mesh(paperGeo, paperMat);
     papers.position.set(0.8, 1.07, 0.1);
     this.group.add(papers);
+
+    // Scattered papers in front of manager (for him to write on)
+    const thinPaperGeo = new THREE.PlaneGeometry(0.35, 0.45);
+    
+    const paper1 = new THREE.Mesh(thinPaperGeo, paperMat);
+    paper1.rotation.x = -Math.PI / 2;
+    paper1.rotation.z = 0.1;
+    paper1.position.set(0.3, 1.051, 0.3);
+    this.group.add(paper1);
+
+    const paper2 = new THREE.Mesh(thinPaperGeo, paperMat);
+    paper2.rotation.x = -Math.PI / 2;
+    paper2.rotation.z = -0.2;
+    paper2.position.set(0.2, 1.052, 0.25);
+    this.group.add(paper2);
+
+    const paper3 = new THREE.Mesh(thinPaperGeo, paperMat);
+    paper3.rotation.x = -Math.PI / 2;
+    paper3.rotation.z = 0.05;
+    paper3.position.set(0.35, 1.053, 0.2);
+    this.group.add(paper3);
 
     // Nameplate
     const nameplateGeo = new THREE.BoxGeometry(0.5, 0.12, 0.08);

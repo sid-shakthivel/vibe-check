@@ -6,6 +6,7 @@ import { DocumentVerifier } from './game/DocumentVerifier.js';
 import { DialogueBox } from './ui/DialogueBox.js';
 import { DocumentPanel } from './ui/DocumentPanel.js';
 import { HUD } from './ui/HUD.js';
+import { AudioManager } from './audio/AudioManager.js';
 import './styles/main.css';
 
 // ─── Initialize ────────────────────────────────────────────────────
@@ -16,7 +17,8 @@ const bankEnv = new BankEnvironment(sceneManager.scene);
 const bankManager = new BankManager(sceneManager.scene);
 const gameState = new GameState();
 const verifier = new DocumentVerifier();
-const dialogueBox = new DialogueBox();
+const audioManager = new AudioManager();
+const dialogueBox = new DialogueBox(audioManager);
 const docPanel = new DocumentPanel(gameState);
 const hud = new HUD();
 
@@ -70,6 +72,7 @@ const STEP_RETRY_DIALOGUE = {
 // ─── Game Flow ─────────────────────────────────────────────────────
 
 hud.onStart(async () => {
+  audioManager.init(); // Initialize audio context on first user interaction
   hud.hideIntro();
   bankManager.setAnimation('welcome');
 
@@ -112,7 +115,8 @@ gameState.on('stateChange', async ({ from, to, data }) => {
 
     case 'REVIEWING_STEP': {
       docPanel.hide();
-      bankManager.setAnimation('thinking');
+      audioManager.playStamp(); // Dramatic thud when submitting
+      bankManager.setAnimation('writing');
 
       const docLabel = gameState.getCurrentDocLabel();
       await dialogueBox.showDialogue([
@@ -143,6 +147,7 @@ gameState.on('stateChange', async ({ from, to, data }) => {
 
     case 'STEP_APPROVED': {
       bankManager.setAnimation('nod');
+      audioManager.playSuccess(); // Pleasant chime
 
       const docLabel = gameState.getCurrentDocLabel();
       const isLastStep = gameState.currentStep >= GameState.DOC_STEPS.length - 1;
@@ -172,13 +177,20 @@ gameState.on('stateChange', async ({ from, to, data }) => {
 
     case 'STEP_REJECTED': {
       bankManager.setAnimation('shake');
+      audioManager.playError(); // Buzzer sound
 
       const docLabel = gameState.getCurrentDocLabel();
       const issues = data.issues.map(i => `• ${docLabel}: ${i}`);
 
+      // SLAM the dramatic rejection stamp on screen
+      hud.showDramaticRejection();
+
       // Show rejection on the panel
       docPanel.show();
       docPanel.showStepResult(data);
+
+      // Wait a moment for dramatic effect before dialogue
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
       await dialogueBox.showDialogue([
         `I'm sorry, but there are issues with your ${docLabel}.`,
@@ -200,6 +212,7 @@ gameState.on('stateChange', async ({ from, to, data }) => {
 // Result overlay actions (retry / play again)
 hud.onResultAction(() => {
   hud.hideResult();
+  hud.hideDramaticRejection();
   if (gameState.state === 'STEP_REJECTED') {
     gameState.retryCurrentStep();
   } else {

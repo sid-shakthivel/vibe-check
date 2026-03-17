@@ -47,10 +47,10 @@ export class BankManager {
     this.torso.castShadow = true;
     this.group.add(this.torso);
 
-    // Shirt collar area
-    const collarGeo = new THREE.CylinderGeometry(0.18, 0.22, 0.12, 10);
+    // Shirt collar area (narrower and shorter)
+    const collarGeo = new THREE.CylinderGeometry(0.14, 0.16, 0.04, 10);
     const collar = new THREE.Mesh(collarGeo, shirtMat);
-    collar.position.y = 1.78;
+    collar.position.y = 1.76;
     this.group.add(collar);
 
     // Tie
@@ -184,6 +184,25 @@ export class BankManager {
     rightHand.position.set(0.38, 1.0, 0);
     this.group.add(rightHand);
 
+    // Pencil in right hand
+    const pencilMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.6 }); // Yellow
+    const leadMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.9 }); // Dark grey lead
+    
+    // Pencil body (aligned better with hand)
+    const pencilGeo = new THREE.CylinderGeometry(0.01, 0.01, 0.18, 6);
+    this.pencil = new THREE.Mesh(pencilGeo, pencilMat);
+    // Position relative to the arm, near the hand end
+    this.pencil.position.set(0.02, -0.32, 0.08); 
+    this.pencil.rotation.x = Math.PI / 2.5;
+    this.pencil.rotation.z = Math.PI / 6;
+    this.rightArm.add(this.pencil); // Attach directly to arm!
+
+    // Pencil tip
+    const tipGeo = new THREE.ConeGeometry(0.012, 0.04, 6);
+    const tip = new THREE.Mesh(tipGeo, leadMat);
+    tip.position.y = -0.09;
+    this.pencil.add(tip);
+
     // --- LEGS (below desk, partially visible) ---
     const legGeo = new THREE.CylinderGeometry(0.09, 0.08, 0.7, 8);
     const leftLeg = new THREE.Mesh(legGeo, suitMat);
@@ -245,6 +264,17 @@ export class BankManager {
         this.head.rotation.x = 0.1;
         this.head.rotation.z = Math.sin(elapsed * 2) * 0.05;
         this.rightArm.rotation.z = -0.15 + Math.sin(elapsed * 1.5) * 0.05;
+        break;
+
+      case 'writing':
+        // Lean over the desk and move right arm back and forth rapidly
+        this.torso.rotation.x = 0.15; // Lean forward
+        this.head.rotation.x = 0.25;  // Look down
+        
+        // Fast scribbling motion with the right arm
+        const scribble = Math.sin(elapsed * 10) * 0.05;
+        this.rightArm.rotation.x = -0.3 + scribble;
+        this.rightArm.rotation.z = -0.1 + Math.cos(elapsed * 8) * 0.1;
         break;
 
       case 'welcome':

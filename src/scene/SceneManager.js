@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-
 export class SceneManager {
   constructor(canvas) {
     this.canvas = canvas;
@@ -30,8 +29,8 @@ export class SceneManager {
     this.camera.lookAt(0, 1.5, 0);
 
     // Background
-    this.scene.background = new THREE.Color(0x1a1a2e);
-    this.scene.fog = new THREE.Fog(0x1a1a2e, 8, 18);
+    this.scene.background = new THREE.Color(0x525c48); // Match the warmer olive/tan vibe
+    this.scene.fog = new THREE.Fog(0x525c48, 8, 18);
 
     // Resize handling
     this._onResize = this._handleResize.bind(this);

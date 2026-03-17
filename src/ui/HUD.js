@@ -12,6 +12,7 @@ export class HUD {
     this.resultTitle = document.getElementById('result-title');
     this.resultMessage = document.getElementById('result-message');
     this.resultBtn = document.getElementById('result-btn');
+    this.dramaticStamp = document.getElementById('dramatic-stamp');
 
     this._onStart = null;
     this._onResultAction = null;
@@ -73,6 +74,23 @@ export class HUD {
     this.resultMessage.style.whiteSpace = 'pre-line';
     this.resultBtn.textContent = 'Try Again';
     this.resultBtn.className = 'retry';
+  }
+
+  showDramaticRejection() {
+    this.dramaticStamp.classList.remove('hidden');
+    // Force reflow to restart animation if needed
+    void this.dramaticStamp.offsetWidth;
+    this.dramaticStamp.classList.add('slam');
+    
+    document.body.classList.add('shake-screen');
+    setTimeout(() => {
+      document.body.classList.remove('shake-screen');
+    }, 400); // Shake duration
+  }
+
+  hideDramaticRejection() {
+    this.dramaticStamp.classList.add('hidden');
+    this.dramaticStamp.classList.remove('slam');
   }
 
   hideResult() {

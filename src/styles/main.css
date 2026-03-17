@@ -472,7 +472,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(93, 102, 83, 0.9);
+  background: rgba(93, 102, 83, 0.6);
 }
 
 #reviewing-spinner {
@@ -619,4 +619,58 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--color-border);
   border-radius: 3px;
+}
+
+/* ─── Dramatic Rejection Stamp ──────────────────────────────────── */
+
+#dramatic-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  font-family: var(--font-primary);
+  font-size: 8rem;
+  font-weight: 900;
+  color: #c92a2a; /* Deep red ink */
+  border: 12px solid #c92a2a;
+  padding: 1rem 3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5rem;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0.8;
+  mix-blend-mode: multiply; /* Looks like ink on the scene */
+  
+  /* Rough, stamp-like appearance */
+  border-radius: 10px;
+  box-shadow: inset 0 0 20px rgba(201, 42, 42, 0.4), 0 0 20px rgba(201, 42, 42, 0.4);
+}
+
+#dramatic-stamp.slam {
+  animation: stamp-slam 0.15s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes stamp-slam {
+  0% {
+    transform: translate(-50%, -50%) rotate(-15deg) scale(5);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-15deg) scale(1);
+    opacity: 0.8;
+  }
+}
+
+.shake-screen {
+  animation: screen-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes screen-shake {
+  10%, 90% { transform: translate3d(-4px, 4px, 0); }
+  20%, 80% { transform: translate3d(8px, -6px, 0); }
+  30%, 50%, 70% { transform: translate3d(-12px, 8px, 0); }
+  40%, 60% { transform: translate3d(12px, -8px, 0); }
 }
